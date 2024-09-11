@@ -15,18 +15,21 @@ namespace TIC.WebAPI.Controllers
         private readonly IGetInsurancesRequestMapper _getInsurancesRequestMapper;
         private readonly IGetInsurancesResponseMapper _getInsurancesResponseMapper;
         private readonly IAddInsuranceRequestMapper _addInsuranceRequestMapper;
+        private readonly IGetDutchInsurancesResponseMapper _getDutchInsurancesResponseMapper;
 
         public InsuranceController(ILogger<InsuranceController> logger, 
             IInsuranceDomain insuranceDomain, 
             IGetInsurancesRequestMapper getInsurancesRequestMapper, 
             IGetInsurancesResponseMapper getInsurancesResponseMapper, 
-            IAddInsuranceRequestMapper addInsuranceRequestMapper)
+            IAddInsuranceRequestMapper addInsuranceRequestMapper,
+            IGetDutchInsurancesResponseMapper getDutchInsurancesResponseMapper)
         {
             _logger = logger;
             _insuranceDomain = insuranceDomain;
             _getInsurancesRequestMapper = getInsurancesRequestMapper;
             _getInsurancesResponseMapper = getInsurancesResponseMapper;
             _addInsuranceRequestMapper = addInsuranceRequestMapper;
+            _getDutchInsurancesResponseMapper = getDutchInsurancesResponseMapper;
         }
 
         [HttpPost(Name = "GetInsurances")]
@@ -58,6 +61,24 @@ namespace TIC.WebAPI.Controllers
             {
                 _logger.Log(LogLevel.Error, exception, exception.Message);
                 throw;
+            }
+        }
+
+        [HttpGet(Name = "GetDutchTravelInsurances")]
+        public GetDutchTravelInsurancesResponse GetDutchTravelInsurances()
+        {
+            try
+            {
+                var insurance = _insuranceDomain.GetDutchTravelInsurances();
+                var mapperResponse = _getDutchInsurancesResponseMapper.Map(insurance);
+                return mapperResponse;
+            }
+            catch (Exception exception)
+            {
+                {
+                    _logger.Log(LogLevel.Error, exception, exception.Message);
+                    throw;
+                }
             }
         }
     }
