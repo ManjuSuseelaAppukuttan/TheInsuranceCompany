@@ -75,10 +75,8 @@ namespace TIC.WebAPI.Controllers
             }
             catch (Exception exception)
             {
-                {
-                    _logger.Log(LogLevel.Error, exception, exception.Message);
-                    throw;
-                }
+                _logger.Log(LogLevel.Error, exception, exception.Message);
+                throw;
             }
         }
     }
